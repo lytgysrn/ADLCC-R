@@ -1,0 +1,37 @@
+AUTO_DLCC
+├── find_peak_size
+├── check_lc
+Define local center (above)
+├── sm_computer
+│   └── sim_matrix_generator
+│       └── sym_mat
+Group similarity matrix (above)
+├── find_stable_centers_ld
+│   ├── LNI_strategy_choice
+│   ├── reachable_similarity
+│   ├── adaptive_merge
+│   │   ├── cnbr_generator
+│   │   ├── check_pairs
+│   │   ├── calc_pro
+│   │   ├── update_group_similarity
+│   │   ├── compute_mcs
+│   │   └── update_index
+│   ├── adaptive_flex_merge
+│   │   ├── update_group_similarity
+│   │   ├── compute_mcs
+│   │   └── update_index
+│   └── ifmerging
+Adaptive merging (above)
+├── get_temp_clus
+│   ├── check_point
+│   └── Assign_score
+Temporary clusters(above)
+├── DAobs
+│   ├── KNNdep
+│   ├── depth_by_cluster
+│   │   ├── depth.Mahalanobis
+│   │   └── spatial.d
+│   └── spatial.d
+Classification (above)
+├── sym_mat
+└── cluster2cv
