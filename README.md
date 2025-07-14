@@ -13,7 +13,7 @@ The codebase is not very clean and may contain redundancies or insufficient comm
 * `run_example.R`:
   Example scripts demonstrating how to run A-DLCC on synthetic and real datasets.
 * `plot_func.R`:
-  Collection of functions for visualization using ggplot2 (for generating plots of clustering results and other related figures).
+  Collection of functions for visualization using ggplot2 .
 
 ## Datasets
 
@@ -21,5 +21,5 @@ Other datasets referenced in the paper (including real-world data and additional
 
 ## Disclaimer
 
-The code is research-oriented and may not be fully modular or production-ready. For questions or suggestions, please contact the authors.
+The code is research-oriented. For questions or suggestions, please contact the authors.
 
