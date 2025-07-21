@@ -1,4 +1,4 @@
-#run example, centroid strategy
+
 #iris
 iris_label=iris[,5]
 dm_iris=rspatial_dp(iris[,-5])
@@ -6,6 +6,7 @@ ILD_mat_iris<-integrated_ld(iris[,-5],dm_iris$dm,Lmatrix = dm_iris$Lmatrix)
 set.seed(2025)
 iris_results=AUTO_DLCC(ILD_info = ILD_mat_iris,data=iris[,-5], dm0=dm_iris$dm,class_method = 'rf')
 cluster_performance(iris_results$cluster_result$cluster_vector,iris_label)
+
 
 #high dimensional, large sample example
 library(tensorflow)
@@ -15,12 +16,10 @@ ILD_mat_yale<-integrated_ld(yale$x,dm_yale$dm,Lmatrix = dm_yale$Lmatrix)
 yale_results=AUTO_DLCC(ILD_info = ILD_mat_yale, data=yale$x,dm0=dm_yale$dm,class_method = 'rf')
 cluster_performance(yale_results$cluster_result$cluster_vector,yale$c)
 
-
-#run example, linkage strategy
-
+#local example
 library(R.matlab)
 path<-getwd()
-pathname<-file.path(path,'ba.mat')
+pathname<-file.path(path,'data/ba.mat')
 databa<-readMat(pathname)
 ba_label=databa$ba.label
 databa=databa$ba

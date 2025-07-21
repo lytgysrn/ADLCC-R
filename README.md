@@ -1,25 +1,34 @@
 
 # A-DLCC
 
-This repository contains R code for **Automatic Depth-based Local Center Clustering (A-DLCC)** via \$\beta\$-integrated local depth and adaptive grouping, as described in our work.
+This repository provides R and Python code for **Automatic Depth-based Local Center Clustering (A-DLCC)** via \$\beta\$-integrated local depth and adaptive grouping.
 
-**Note:**
-The codebase is not very clean and may contain redundancies or insufficient comments. Please use with discretion.
+* **R version:** Main implementation (all paper results are based on R code).
+* **Python version:** Later port; code is cleaner (version 3.11.7).
 
-## File Structure
-
-* `Function_adlcc.R`:
-  All functions for the implementation of A-DLCC, including integrated local depth, local center detection, adaptive grouping, and clustering assignment.
-* `run_example.R`:
-  Example scripts demonstrating how to run A-DLCC on synthetic and real datasets.
-* `plot_func.R`:
-  Collection of functions for visualization using ggplot2 .
+> **Note:**
+> The codebase may contain redundant parts. 
+---
+## Structure
+* `Function_adlcc.R`: Core functions for A-DLCC (R)
+* `run_example.R`: Example scripts (R)
+* `plot_func.R`: Visualization functions (R)
+* `A-DLCC_python/`: Python implementation
 
 ## Datasets
+Some are included in the repository, other datasets used in the paper can be found at:
+[https://github.com/lytgysrn/dlcc](https://github.com/lytgysrn/dlcc)
 
-Other datasets referenced in the paper (including real-world data and additional simulation setups) can be obtained from [https://github.com/lytgysrn/dlcc](https://github.com/lytgysrn/dlcc).
+## Usage
 
-## Disclaimer
+* **R:** Run `run_example.R` for demo.
+* **Python:** See A_DLCC_DEMO.ipynb
 
-The code is research-oriented. For questions or suggestions, please contact the authors.
+Function-dendrogram.txt: Contains related functions for dendrogram and hierarchical visualization.
+---
+
+**For questions or suggestions, please contact the authors.**
+
+---
+
 

@@ -677,11 +677,11 @@ adaptive_merge<- function(save_lc, R, sym_dm, sym_sm, nbr_save,reachable_list) {
   pairs <- cnbr_generator(temp_sm)  # find all mutually most similar group
   ps<- sapply(pairs, function(x) sym_sm[x, x] %>% min) 
   th_fs=min(ps)
-  min_close=min(temp_sm%>%rowMaxs(value=T))
-  if (th_fs==min_close){
-    pairs=pairs[ps>th_fs]
-    th_fs=ps[ps>th_fs]%>%min()
-  }
+  # min_close=min(temp_sm%>%rowMaxs(value=T))
+  # if (th_fs==min_close){
+  #   pairs=pairs[ps>th_fs]
+  #   th_fs=ps[ps>th_fs]%>%min()
+  # }
   min_pos=sym_sm[sym_sm!=0]%>%min
   # repeatly merging mutually pairs
   repeat {
@@ -848,6 +848,8 @@ adaptive_merge<- function(save_lc, R, sym_dm, sym_sm, nbr_save,reachable_list) {
 #adaptive merging (centroid strategy)
 adaptive_flex_merge<- function(save_lc, R, sym_dm, sym_sm, nbr_save,reachable_list) {
   all_mer <- reachable_similarity(sym_dm)
+  #define at the beginning (no update latter)
+  overall_max=max(sym_sm*upper.tri(sym_sm))
   
   valid_neighbors_list=lapply(seq_along(save_lc),function(x){
     label=setdiff(which(sym_sm[x,]!=0),x)
@@ -891,9 +893,10 @@ adaptive_flex_merge<- function(save_lc, R, sym_dm, sym_sm, nbr_save,reachable_li
 
       left_obs=unlist(nbr_save)
       all_mer_sub<- reachable_similarity(sym_dm[left_obs,left_obs])
+      
       row_mean_to <-lapply(nbr_save,function(x){
         idx=match(x,left_obs)
-        all_mer[idx,-idx]%>%rowmeans()
+        all_mer_sub[idx,-idx]%>%rowmeans()
       })
       bth_all=sapply(1:length(save_lc),function(x){mean(row_mean_to[[x]]/reachable_list[[x]])})
     }
@@ -903,9 +906,7 @@ adaptive_flex_merge<- function(save_lc, R, sym_dm, sym_sm, nbr_save,reachable_li
   N <- length(save_lc)
   if (N>2){
     accept_save<-vector("list",length=N)
-    reject_save=accept_save
     considered_nbr_list <- vector('list',length=N)
-    overall_max=max(sym_sm*upper.tri(sym_sm))
     bound=1
     stop_bound=0.9*min(bth_all)
     for (i in 1:N){
@@ -957,8 +958,6 @@ adaptive_flex_merge<- function(save_lc, R, sym_dm, sym_sm, nbr_save,reachable_li
             if (Q<bound){
               bound=Q
             }
-          } else {
-            reject_save[[i]]<-c(reject_save[[i]],setNames(Q, idx))
           }
           
           j=j+1
@@ -990,6 +989,7 @@ adaptive_flex_merge<- function(save_lc, R, sym_dm, sym_sm, nbr_save,reachable_li
   })
   
   group_list <- split(seq(save_lc), group)
+  
   nbr_save <- split(seq_len(nrow(sym_dm)), apply(sym_dm[, save_lc, drop=FALSE], 1, which.max))
   result_clusters <- lapply(group_list, function(s) nbr_save[s]%>%unlist)
   
@@ -1118,11 +1118,9 @@ ifmerging<-function(dm0.order,nbr_save,save_lc,N){
 }
 
 #stable local centers grouping
-find_stable_centers_ld <- function(ILD_mat,nbr_list,matrix_info,sym_dm,strategy=c(),dm0.order) {
+find_stable_centers_ld <- function(matrix_info,sym_dm,strategy=c(),dm0.order) {
   save_lc=matrix_info$save_lc
-  counts=matrix_info$counts
   sym_sm=matrix_info$sym_sm
-  TFmatrix=matrix_info$TFmatrix
   nbr_save=matrix_info$nbr_save
   
   N=length(save_lc)
@@ -1213,7 +1211,6 @@ get_temp_clus<-function(sym_dm,group_info,strategy,data,freq_table=c()){
   lg<-lengths(group_list)
   Kclus=length(group_list)
   clus.ind<-1:Kclus
-  cl<-rep(clus.ind,lg)
   
   if (any(lg==1)){
     add_pos=which(lg==1)
@@ -1245,9 +1242,6 @@ get_temp_clus<-function(sym_dm,group_info,strategy,data,freq_table=c()){
     #update_info
     a<-unlist(group_list)
     lg<-lengths(group_list)
-    Kclus=length(group_list)
-    clus.ind<-1:Kclus
-    cl<-rep(clus.ind,lg)
   }
   
   
@@ -1261,7 +1255,7 @@ get_temp_clus<-function(sym_dm,group_info,strategy,data,freq_table=c()){
   temp_clus=temp_clus_result$temp_clus
   left_clus=temp_clus_result$left_clus
   
-  # if (strategy!='linkage') {
+
   score_temp<-Assign_score(Kclus,sym_dm,temp_clus,group_list)
   left_num<-sum(lengths(left_clus))
   if (left_num>0){
@@ -1328,7 +1322,7 @@ get_temp_clus<-function(sym_dm,group_info,strategy,data,freq_table=c()){
       temp_clus[[i]]<-c(temp_clus[[i]],left_clus[[i]])
     }
   }
-  # }
+
   return(list(temp_clus=temp_clus,group_list=group_list,stable_centers=a))
 }
 
@@ -1485,7 +1479,7 @@ AUTO_DLCC<-function(ILD_info,dm0,data,class_method='knn',K_knn=7,depth='spatial'
   save_lc=save_lc_contents$save_lc
   freq_table=save_lc_contents$freq_table
   matrix_info=sm_computer(save_lc,sym_dm)
-  stable_centers_info=find_stable_centers_ld(ILD_mat = ILD_mat,nbr_list,matrix_info = matrix_info,sym_dm,strategy = strategy,dm0.order)
+  stable_centers_info=find_stable_centers_ld(matrix_info = matrix_info,sym_dm,strategy = strategy,dm0.order)
   temp_clus<-get_temp_clus(sym_dm,stable_centers_info$group_list,strategy = stable_centers_info$strategy,data=data,freq_table)
   cluster_result<-DAobs(data,temp_clus$temp_clus, method=class_method,K_knn=K_knn,depth=depth,dm0=dm0)
   return(list(temp_clus=temp_clus$temp_clus,cluster_result=cluster_result,group_list=temp_clus$group_list,stable_centers=temp_clus$stable_centers,strategy=stable_centers_info$strategy))
