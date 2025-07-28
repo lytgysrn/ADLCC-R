@@ -13,7 +13,7 @@ This repository provides R and Python code for **Automatic Depth-based Local Cen
 * `Function_adlcc.R`: Core functions for A-DLCC (R)
 * `run_example.R`: Example scripts (R)
 * `plot_func.R`: Visualization functions (R)
-* `A-DLCC_python/`: Python implementation
+* `A-DLCC_python/`: Python implementation (using cursor, so with AI assistance)
 
 ## Datasets
 Some are included in the repository, other datasets used in the paper can be found at:
